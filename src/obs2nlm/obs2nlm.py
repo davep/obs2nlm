@@ -32,9 +32,6 @@ PREAMBLE: Final[str] = """\
 6. Use the table of contents to search for specific files and to cite the source for any answer created.
 7. If a user asks for a 'summary of the vault', refer to the table of contents.
 8. Files in the format YYYY-MM-DD.md are going to be daily note files; parse the name as a date and refer to it where possible.
-
----
-
 """
 
 ##############################################################################
@@ -75,6 +72,27 @@ def resolve_source(args: Namespace) -> Path:
 
 
 ##############################################################################
+def additional_instructions(instructions: str | None) -> str | None:
+    """Loads up any additional instructions to place in the output.
+
+    Args:
+        instructions: The instructions to look at and use.
+
+    Returns:
+        The instructions if there are any, or `None`.
+
+    Notes:
+        If there is a file in the filesystem that matches the content of
+        `instructions` then the content of that file will be used, otherwise
+        the text will be used.
+    """
+    if instructions is not None:
+        if Path(instructions).is_file():
+            instructions = Path(instructions).read_text(encoding="uft-8")
+    return instructions
+
+
+##############################################################################
 def make_source(args: Namespace) -> None:
     """Make a source file for NotebookLM.
 
@@ -87,9 +105,13 @@ def make_source(args: Namespace) -> None:
 
     print(f"Converting {vault} to {source}")
     table_of_content: list[Path] = []
-    estimated_word_count = len(PREAMBLE.split())
+    extra_preamble = additional_instructions(args.additional_instructions)
+    estimated_word_count = len((PREAMBLE + (extra_preamble or "")).split())
     with source.open("w", encoding="utf-8") as notebook_source:
         notebook_source.write(PREAMBLE)
+        if extra_preamble:
+            notebook_source.write(f"\n\n## ADDITIONAL RULES\n\n{extra_preamble}")
+        notebook_source.write("\n\n---\n\n")
         for vault_file in vault.rglob("*.md"):
             table_of_content.append(vault_file.relative_to(vault))
             notebook_source.write(f"BEGIN SOURCE: {vault_file.relative_to(vault)}\n\n")
@@ -124,6 +146,13 @@ def get_args() -> Namespace:
         prog=Path(__file__).stem,
         description="Turn an Obsidian vault into a NotebookLM source",
         epilog=version,
+    )
+
+    # Add additional instructions.
+    parser.add_argument(
+        "-a",
+        "--additional-instructions",
+        help="Additional instructions to pass on to NotebookLM at the top of the source",
     )
 
     # Add the vault.
