@@ -108,7 +108,7 @@ def make_source(args: Namespace) -> None:
     if estimated_word_count > WORD_LIMIT:
         print("NotebookLM will truncate this source!")
     else:
-        print(f"{(estimated_word_count/WORD_LIMIT)*100:.1f}% of the limit")
+        print(f"{(estimated_word_count / WORD_LIMIT) * 100:.1f}% of the limit")
 
 
 ##############################################################################
