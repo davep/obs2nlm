@@ -36,6 +36,10 @@ PREAMBLE: Final[str] = """\
 
 """
 
+##############################################################################
+WORD_LIMIT: Final[int] = 500_000
+"""The word limit for a source in NotebookLM."""
+
 
 ##############################################################################
 def resolve_vault(vault: Path) -> Path:
@@ -82,12 +86,14 @@ def make_source(args: Namespace) -> None:
 
     print(f"Converting {vault} to {source}")
     table_of_content: list[Path] = []
+    estimated_word_count = len(PREAMBLE.split())
     with source.open("w", encoding="utf-8") as notebook_source:
         notebook_source.write(PREAMBLE)
         for vault_file in vault.rglob("*.md"):
             table_of_content.append(vault_file.relative_to(vault))
             notebook_source.write(f"BEGIN SOURCE: {vault_file.relative_to(vault)}\n\n")
-            notebook_source.write(vault_file.read_text(encoding="utf-8"))
+            notebook_source.write(content := vault_file.read_text(encoding="utf-8"))
+            estimated_word_count += len(content.split())
             notebook_source.write(
                 f"\n\nEND SOURCE: {vault_file.relative_to(vault)}\n\n"
             )
@@ -95,6 +101,14 @@ def make_source(args: Namespace) -> None:
         for entry in sorted(table_of_content):
             notebook_source.write(f"* {entry}\n")
         notebook_source.write("\n\nEND TABLE OF CONTENT\n\n")
+    # Add some extra word count for the TOC itself, and also include a rough
+    # estimate for the begin/end markers for the content.
+    estimated_word_count += len(table_of_content) * 7
+    print(f"Estimated word count: {estimated_word_count}")
+    if estimated_word_count > WORD_LIMIT:
+        print("NotebookLM will truncate this source!")
+    else:
+        print(f"{(estimated_word_count/WORD_LIMIT)*100:.1f}% of the limit")
 
 
 ##############################################################################
