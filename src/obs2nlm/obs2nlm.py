@@ -11,7 +11,9 @@ from typing import Final
 from . import __version__
 
 ##############################################################################
-DEFAULT_VAULT_ROOT:Final[Path]=Path("~/Library/Mobile Documents/iCloud~md~obsidian/Documents").expanduser()
+DEFAULT_VAULT_ROOT: Final[Path] = Path(
+    "~/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+).expanduser()
 """The default root to search for vaults.
 
 Note:
@@ -34,6 +36,7 @@ PREAMBLE: Final[str] = """\
 
 """
 
+
 ##############################################################################
 def resolve_vault(vault: Path) -> Path:
     """Work out the full path to the vault.
@@ -51,6 +54,7 @@ def resolve_vault(vault: Path) -> Path:
     print(f"Can't find an Obsidian vault named '{vault}'")
     exit(1)
 
+
 ##############################################################################
 def resolve_source(args: Namespace) -> Path:
     """Work out the name to use for the source file to create.
@@ -63,6 +67,7 @@ def resolve_source(args: Namespace) -> Path:
         work out a name.
     """
     return args.source or Path(args.vault.stem).with_suffix(".md")
+
 
 ##############################################################################
 def make_source(args: Namespace) -> None:
@@ -83,11 +88,14 @@ def make_source(args: Namespace) -> None:
             table_of_content.append(vault_file.relative_to(vault))
             notebook_source.write(f"BEGIN SOURCE: {vault_file.relative_to(vault)}\n\n")
             notebook_source.write(vault_file.read_text(encoding="utf-8"))
-            notebook_source.write(f"\n\nEND SOURCE: {vault_file.relative_to(vault)}\n\n")
+            notebook_source.write(
+                f"\n\nEND SOURCE: {vault_file.relative_to(vault)}\n\n"
+            )
         notebook_source.write("\n\nBEGIN TABLE OF CONTENT\n\n")
         for entry in sorted(table_of_content):
             notebook_source.write(f"* {entry}\n")
         notebook_source.write("\n\nEND TABLE OF CONTENT\n\n")
+
 
 ##############################################################################
 def get_args() -> Namespace:
@@ -131,9 +139,11 @@ def get_args() -> Namespace:
     # Parse the command line.
     return parser.parse_args()
 
+
 ##############################################################################
 def main() -> None:
     """Main entry point."""
     make_source(get_args())
+
 
 ### obs2nlm.py ends here
