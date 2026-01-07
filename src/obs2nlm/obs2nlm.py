@@ -104,7 +104,7 @@ def make_source(args: Namespace) -> None:
     # Add some extra word count for the TOC itself, and also include a rough
     # estimate for the begin/end markers for the content.
     estimated_word_count += len(table_of_content) * 7
-    print(f"Estimated word count: {estimated_word_count}")
+    print(f"Estimated word count: {estimated_word_count:,}")
     if estimated_word_count > WORD_LIMIT:
         print("NotebookLM will truncate this source!")
     else:
