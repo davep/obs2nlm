@@ -34,3 +34,11 @@ explicit = true
 venvPath="."
 venv=".venv"
 exclude=[".venv"]
+
+[dependency-groups]
+dev = [
+    "codespell>=2.4.1",
+    "mypy>=1.19.1",
+    "pre-commit>=4.5.1",
+    "ruff>=0.14.10",
+]
