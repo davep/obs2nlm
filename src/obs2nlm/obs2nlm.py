@@ -22,7 +22,8 @@ Note:
 
 ##############################################################################
 PREAMBLE: Final[str] = """\
-""# AI NAVIGATION & BEHAVIOR RULES
+# AI NAVIGATION & BEHAVIOR RULES
+
 1. This file is a 'mega-source' containing an entire Obsidian vault.
 2. Every individual note starts with 'BEGIN SOURCE: [path]' and ends with 'END SOURCE: [path]'.
 3. Always cite the specific 'BEGIN SOURCE' filename when providing information.
