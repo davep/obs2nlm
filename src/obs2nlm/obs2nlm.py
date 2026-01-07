@@ -20,12 +20,17 @@ Note:
 
 ##############################################################################
 PREAMBLE: Final[str] = """\
-# DOCUMENT TYPE: INTEGRATED KNOWLEDGE BASE
-DESCRIPTION: This is a single-file concatenation of an Obsidian vault. \
-At the end of the file is a table of contents, marked with BEGIN TABLE OF CONTENT and END TABLE OF CONTENT. \
-Use the table of contents to search for specific files and to cite the source for any answer created \
-from the contents of this file.
-DELIMITER NOTICE: Each note is contained between 'BEGIN SOURCE' and 'END SOURCE' markers.
+""# AI NAVIGATION & BEHAVIOR RULES
+1. This file is a 'mega-source' containing an entire Obsidian vault.
+2. Every individual note starts with 'BEGIN SOURCE: [path]' and ends with 'END SOURCE: [path]'.
+3. Always cite the specific 'BEGIN SOURCE' filename when providing information.
+4. YAML frontmatter (between --- near the start of a source) contains valid metadata; prioritise it for dating and tagging.
+5. At the end of the file is a table of contents, marked with BEGIN TABLE OF CONTENT and END TABLE OF CONTENT.
+6. Use the table of contents to search for specific files and to cite the source for any answer created.
+7. If a user asks for a 'summary of the vault', refer to the table of contents.
+8. Files in the format YYYY-MM-DD.md are going to be daily note files; parse the name as a date and refer to it where possible.
+
+---
 
 """
 
