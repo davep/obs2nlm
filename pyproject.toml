@@ -1,6 +1,6 @@
 [project]
 name = "obs2nlm"
-version = "0.0.1"
+version = "1.0.0"
 description = "Convert Obsidian vaults to NotebookLM sources"
 authors = [
     { name = "Dave Pearson", email = "davep@davep.org" }
@@ -15,6 +15,20 @@ keywords = [
     "ai",
     "llm",
     "machine-learning",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Documentation",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Utilities",
+    "Typing :: Typed",
 ]
 
 [project.scripts]
