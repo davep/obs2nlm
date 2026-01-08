@@ -91,6 +91,11 @@ the vault you're generating the file for.
     matches the name of a file in your filesystem, the content of that file
     will be read and used; otherwise the value given to the switch will be used.
 
+### `-i`, `--instructions`
+
+This switch is similar to the one above, but it lets you overwrite the
+instructions that are built into `obs2nlm`.
+
 ## Examples
 
 Create a NotebookLM source from a vault named "Observations":

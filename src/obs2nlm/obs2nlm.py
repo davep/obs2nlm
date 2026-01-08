@@ -25,13 +25,16 @@ PREAMBLE: Final[str] = """\
 # AI NAVIGATION & BEHAVIOR RULES
 
 1. This file is a 'mega-source' containing an entire Obsidian vault.
-2. Every individual note starts with 'BEGIN SOURCE: [path]' and ends with 'END SOURCE: [path]'.
-3. Always cite the specific 'BEGIN SOURCE' filename when providing information.
-4. YAML frontmatter (between --- near the start of a source) contains valid metadata; prioritise it for dating and tagging.
-5. At the end of the file is a table of contents, marked with BEGIN TABLE OF CONTENT and END TABLE OF CONTENT.
-6. Use the table of contents to search for specific files and to cite the source for any answer created.
-7. If a user asks for a 'summary of the vault', refer to the table of contents.
-8. Files in the format YYYY-MM-DD.md are going to be daily note files; parse the name as a date and refer to it where possible.
+2. Every note is wrapped in 'BEGIN SOURCE: [path]' and 'END SOURCE: [path]'. Always cite the [path] when answering.
+3. At the end of the file is a table of contents, marked with 'BEGIN TABLE OF CONTENT' and 'END TABLE OF CONTENT'. Use the table of contents to help build up relationships and to help with searching. If I ask for a 'summary of the vault', refer to the table of contents.
+4. Sources with a [path] that ends in the format YYYY-MM-DD.md are going to be daily note files; parse the name as a date and refer to it where possible.
+
+# VAULT CONVENTIONS
+
+- [[Text]] like this is an internal link to related information. If I ask about a linked topic, search for the 'BEGIN SOURCE' header that matches that link.
+- [[Text|and more text]] is an internal link with an alias after the `|` character. Treat the text and the alias as the same linked concept.
+- YAML frontmatter (between --- near the start of a source) contains valid metadata; prioritise it for dating and tagging.
+- Text marked with '> [!TYPE]' (e.g., INFO, TODO, WARNING) represents categorized highlights. Treat these as high-signal data.
 """
 
 ##############################################################################
@@ -72,8 +75,8 @@ def resolve_source(args: Namespace) -> Path:
 
 
 ##############################################################################
-def additional_instructions(instructions: str | None) -> str | None:
-    """Loads up any additional instructions to place in the output.
+def get_instructions(instructions: str | None) -> str | None:
+    """Loads up any instructions to place in the output.
 
     Args:
         instructions: The instructions to look at and use.
@@ -105,12 +108,13 @@ def make_source(args: Namespace) -> None:
 
     print(f"Converting {vault} to {source}")
     table_of_content: list[Path] = []
-    extra_preamble = additional_instructions(args.additional_instructions)
-    estimated_word_count = len((PREAMBLE + (extra_preamble or "")).split())
+    preamble = get_instructions(args.instructions) or PREAMBLE
+    extra_preamble = get_instructions(args.additional_instructions) or ""
+    estimated_word_count = len((preamble + extra_preamble).split())
     with source.open("w", encoding="utf-8") as notebook_source:
-        notebook_source.write(PREAMBLE)
+        notebook_source.write(preamble)
         if extra_preamble:
-            notebook_source.write(f"\n\n## ADDITIONAL RULES\n\n{extra_preamble}")
+            notebook_source.write(f"\n\n# ADDITIONAL RULES\n\n{extra_preamble}")
         notebook_source.write("\n\n---\n\n")
         for vault_file in vault.rglob("*.md"):
             table_of_content.append(vault_file.relative_to(vault))
@@ -153,6 +157,13 @@ def get_args() -> Namespace:
         "-a",
         "--additional-instructions",
         help="Additional instructions to pass on to NotebookLM at the top of the source",
+    )
+
+    # Replace the builtin instructions.
+    parser.add_argument(
+        "-i",
+        "--instructions",
+        help="Override the builtin instructions to pass on to NotebookLM at the top of the source,",
     )
 
     # Add the vault.
