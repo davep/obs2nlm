@@ -41,4 +41,6 @@ dev = [
     "mypy>=1.19.1",
     "pre-commit>=4.5.1",
     "ruff>=0.14.10",
+    "mkdocs-material>=9.6.9",
+    "markdown-exec>=1.10.2",
 ]
