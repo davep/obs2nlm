@@ -1,5 +1,13 @@
 # obs2nlm ChangeLog
 
+## Unreleased
+
+**Released: WiP**
+
+- Tweaked the builtin preamble that is included in the output file.
+- Added an `--instructions` switch so the builtin instructions can be
+  overridden.
+
 ## v1.0.0
 
 **Released: 2026-01-08**

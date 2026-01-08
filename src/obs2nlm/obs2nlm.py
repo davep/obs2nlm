@@ -75,8 +75,8 @@ def resolve_source(args: Namespace) -> Path:
 
 
 ##############################################################################
-def additional_instructions(instructions: str | None) -> str | None:
-    """Loads up any additional instructions to place in the output.
+def get_instructions(instructions: str | None) -> str | None:
+    """Loads up any instructions to place in the output.
 
     Args:
         instructions: The instructions to look at and use.
@@ -108,12 +108,13 @@ def make_source(args: Namespace) -> None:
 
     print(f"Converting {vault} to {source}")
     table_of_content: list[Path] = []
-    extra_preamble = additional_instructions(args.additional_instructions)
-    estimated_word_count = len((PREAMBLE + (extra_preamble or "")).split())
+    preamble = get_instructions(args.instructions) or PREAMBLE
+    extra_preamble = get_instructions(args.additional_instructions) or ""
+    estimated_word_count = len((preamble + extra_preamble).split())
     with source.open("w", encoding="utf-8") as notebook_source:
-        notebook_source.write(PREAMBLE)
+        notebook_source.write(preamble)
         if extra_preamble:
-            notebook_source.write(f"\n\n## ADDITIONAL RULES\n\n{extra_preamble}")
+            notebook_source.write(f"\n\n# ADDITIONAL RULES\n\n{extra_preamble}")
         notebook_source.write("\n\n---\n\n")
         for vault_file in vault.rglob("*.md"):
             table_of_content.append(vault_file.relative_to(vault))
@@ -156,6 +157,13 @@ def get_args() -> Namespace:
         "-a",
         "--additional-instructions",
         help="Additional instructions to pass on to NotebookLM at the top of the source",
+    )
+
+    # Replace the builtin instructions.
+    parser.add_argument(
+        "-i",
+        "--instructions",
+        help="Override the builtin instructions to pass on to NotebookLM at the top of the source,",
     )
 
     # Add the vault.
