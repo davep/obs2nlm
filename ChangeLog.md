@@ -1,8 +1,8 @@
 # obs2nlm ChangeLog
 
-## Unreleased
+## v1.0.0
 
-**Released: WiP**
+**Released: 2026-01-08**
 
 - Added support for warning when we're near the NotebookLM word limit.
 - Added `--additional-instructions` as a command line parameter.
