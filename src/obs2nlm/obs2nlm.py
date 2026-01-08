@@ -25,13 +25,16 @@ PREAMBLE: Final[str] = """\
 # AI NAVIGATION & BEHAVIOR RULES
 
 1. This file is a 'mega-source' containing an entire Obsidian vault.
-2. Every individual note starts with 'BEGIN SOURCE: [path]' and ends with 'END SOURCE: [path]'.
-3. Always cite the specific 'BEGIN SOURCE' filename when providing information.
-4. YAML frontmatter (between --- near the start of a source) contains valid metadata; prioritise it for dating and tagging.
-5. At the end of the file is a table of contents, marked with BEGIN TABLE OF CONTENT and END TABLE OF CONTENT.
-6. Use the table of contents to search for specific files and to cite the source for any answer created.
-7. If a user asks for a 'summary of the vault', refer to the table of contents.
-8. Files in the format YYYY-MM-DD.md are going to be daily note files; parse the name as a date and refer to it where possible.
+2. Every note is wrapped in 'BEGIN SOURCE: [path]' and 'END SOURCE: [path]'. Always cite the [path] when answering.
+3. At the end of the file is a table of contents, marked with 'BEGIN TABLE OF CONTENT' and 'END TABLE OF CONTENT'. Use the table of contents to help build up relationships and to help with searching. If I ask for a 'summary of the vault', refer to the table of contents.
+4. Sources with a [path] that ends in the format YYYY-MM-DD.md are going to be daily note files; parse the name as a date and refer to it where possible.
+
+# VAULT CONVENTIONS
+
+- [[Text]] like this is an internal link to related information. If I ask about a linked topic, search for the 'BEGIN SOURCE' header that matches that link.
+- [[Text|and more text]] is an internal link with an alias after the `|` character. Treat the text and the alias as the same linked concept.
+- YAML frontmatter (between --- near the start of a source) contains valid metadata; prioritise it for dating and tagging.
+- Text marked with '> [!TYPE]' (e.g., INFO, TODO, WARNING) represents categorized highlights. Treat these as high-signal data.
 """
 
 ##############################################################################
