@@ -5,8 +5,9 @@
 **Released: WiP**
 
 - Tweaked the builtin preamble that is included in the output file.
+  ([#4](https://github.com/davep/obs2nlm/pull/4))
 - Added an `--instructions` switch so the builtin instructions can be
-  overridden.
+  overridden. ([#4](https://github.com/davep/obs2nlm/pull/4))
 
 ## v1.0.0
 
