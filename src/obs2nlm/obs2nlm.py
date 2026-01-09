@@ -91,7 +91,7 @@ def get_instructions(instructions: str | None) -> str | None:
     """
     if instructions is not None:
         if Path(instructions).is_file():
-            instructions = Path(instructions).read_text(encoding="uft-8")
+            instructions = Path(instructions).read_text(encoding="utf-8")
     return instructions
 
 
