@@ -389,6 +389,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-i-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        -i, --instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -542,6 +553,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#-i-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        -i, --instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -620,8 +642,8 @@ with:</p>
 <div class="highlight"><pre><span></span><code>obs2nlm<span class="w"> </span>--help
 </code></pre></div>
 <p>giving output like this:</p>
-<div class="highlight"><pre><span></span><code>usage: obs2nlm [-h] [-a ADDITIONAL_INSTRUCTIONS] --vault VAULT
-               [--source SOURCE] [-v]
+<div class="highlight"><pre><span></span><code>usage: obs2nlm [-h] [-a ADDITIONAL_INSTRUCTIONS] [-i INSTRUCTIONS]
+               --vault VAULT [--source SOURCE] [-v]
 
 Turn an Obsidian vault into a NotebookLM source
 
@@ -630,12 +652,15 @@ options:
   -a, --additional-instructions ADDITIONAL_INSTRUCTIONS
                         Additional instructions to pass on to NotebookLM at
                         the top of the source
+  -i, --instructions INSTRUCTIONS
+                        Override the builtin instructions to pass on to
+                        NotebookLM at the top of the source,
   --vault VAULT         The name of or the path to the source vault
   --source SOURCE       The path to the file to create as the source for
                         NotebookLM
   -v, --version         Show version information
 
-v1.0.0
+v1.1.0
 </code></pre></div>
 <p>The key options are:</p>
 <h3 id="-vault"><code>--vault</code></h3>
@@ -671,6 +696,9 @@ the vault you're generating the file for.</p>
 matches the name of a file in your filesystem, the content of that file
 will be read and used; otherwise the value given to the switch will be used.</p>
 </div>
+<h3 id="-i-instructions"><code>-i</code>, <code>--instructions</code></h3>
+<p>This switch is similar to the one above, but it lets you overwrite the
+instructions that are built into <code>obs2nlm</code>.</p>
 <h2 id="examples">Examples</h2>
 <p>Create a NotebookLM source from a vault named "Observations":</p>
 <div class="highlight"><pre><span></span><code>obs2nlm<span class="w"> </span>--vault<span class="w"> </span>Observations
