@@ -1,8 +1,8 @@
 # obs2nlm ChangeLog
 
-## Unreleased
+## v1.1.1
 
-**Released: WiP**
+**Released: 2026-01-09**
 
 - Fixed a crash due when using additional instructions.
   ([#6](https://github.com/davep/obs2nlm/pull/6))
