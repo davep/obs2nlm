@@ -89,9 +89,8 @@ def get_instructions(instructions: str | None) -> str | None:
         `instructions` then the content of that file will be used, otherwise
         the text will be used.
     """
-    if instructions is not None:
-        if Path(instructions).is_file():
-            instructions = Path(instructions).read_text(encoding="utf-8")
+    if instructions is not None and Path(instructions).is_file():
+        instructions = Path(instructions).read_text(encoding="utf-8")
     return instructions
 
 
