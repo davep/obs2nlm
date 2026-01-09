@@ -1,6 +1,6 @@
 [project]
 name = "obs2nlm"
-version = "1.1.0"
+version = "1.1.1"
 description = "Convert Obsidian vaults to NotebookLM sources"
 authors = [
     { name = "Dave Pearson", email = "davep@davep.org" }
