@@ -5,6 +5,7 @@
 **Released: WiP**
 
 - Fixed a crash due when using additional instructions.
+  ([#6](https://github.com/davep/obs2nlm/pull/6))
 
 ## v1.1.0
 
