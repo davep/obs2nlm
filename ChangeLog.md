@@ -1,8 +1,8 @@
 # obs2nlm ChangeLog
 
-## Unreleased
+## v1.1.0
 
-**Released: WiP**
+**Released: 2026-01-09**
 
 - Tweaked the builtin preamble that is included in the output file.
   ([#4](https://github.com/davep/obs2nlm/pull/4))
