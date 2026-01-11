@@ -1,6 +1,6 @@
 [project]
 name = "obs2nlm"
-version = "1.1.1"
+version = "1.1.2"
 description = "Convert Obsidian vaults to NotebookLM sources"
 authors = [
     { name = "Dave Pearson", email = "davep@davep.org" }
@@ -30,6 +30,14 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
+
+[project.urls]
+Homepage = "https://obs2nlm.davep.dev/"
+Repository = "https://github.com/davep/obs2nlm"
+Documentation = "https://obs2nlm.davep.dev/"
+Source = "https://github.com/davep/obs2nlm"
+Issues = "https://github.com/davep/obs2nlm/issues"
+Discussions = "https://github.com/davep/obs2nlm/discussions"
 
 [project.scripts]
 obs2nlm = "obs2nlm:main"
