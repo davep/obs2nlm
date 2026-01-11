@@ -1,5 +1,11 @@
 # obs2nlm ChangeLog
 
+## v1.1.2
+
+**Released: 2026-01-11**
+
+- Release to update the package metadata on PyPI.
+
 ## v1.1.1
 
 **Released: 2026-01-09**
