@@ -66,3 +66,29 @@ dev = [
     "mkdocs-material>=9.6.9",
     "markdown-exec>=1.10.2",
 ]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+ignore = [
+    # I think try...expect...pass reads far better.
+    "SIM105",
+    # There's a lot of in-code markdown text in here which I don't want to
+    # wrap.
+    "E501",
+]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
