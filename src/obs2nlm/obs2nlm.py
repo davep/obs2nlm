@@ -5,7 +5,7 @@
 from argparse import ArgumentParser, Namespace
 from os import devnull
 from pathlib import Path
-from typing import Final
+from typing import IO, Final
 
 ##############################################################################
 # Local imports.
@@ -96,6 +96,49 @@ def get_instructions(instructions: str | None) -> str | None:
 
 
 ##############################################################################
+def part_path(source: Path, part: int) -> Path:
+    """Get the output file path for a given part number.
+
+    Args:
+        source: The base output file path.
+        part: The part number (1-based; part 1 returns the source unchanged).
+
+    Returns:
+        The path for the given part.
+    """
+    return source if part == 1 else source.with_stem(f"{source.stem}-part{part}")
+
+
+##############################################################################
+def write_preamble(output: IO[str], preamble: str, extra_preamble: str) -> None:
+    """Write the preamble block to an output file.
+
+    Args:
+        output: An open writable file object.
+        preamble: The main preamble text.
+        extra_preamble: Additional instructions, or empty string if none.
+    """
+    output.write(preamble)
+    if extra_preamble:
+        output.write(f"\n\n# ADDITIONAL RULES\n\n{extra_preamble}")
+    output.write("\n\n---\n\n")
+
+
+##############################################################################
+def write_toc(output: IO[str], table_of_content: list[Path]) -> None:
+    """Write the table of contents block to an output file.
+
+    Args:
+        output: An open writable file object.
+        table_of_content: The list of vault-relative paths to include.
+    """
+    output.write("\n\nBEGIN TABLE OF CONTENT\n\n")
+    for entry in sorted(table_of_content):
+        output.write(f"* {entry}\n")
+    output.write("\n\nEND TABLE OF CONTENT\n\n")
+
+
+##############################################################################
 def make_source(args: Namespace) -> None:
     """Make a source file for NotebookLM.
 
@@ -109,37 +152,77 @@ def make_source(args: Namespace) -> None:
     print(
         f"{'Simulating converting' if args.dry_run else 'Converting'} {vault} to {source}"
     )
-    table_of_content: list[Path] = []
+
     preamble = get_instructions(args.instructions) or PREAMBLE
     extra_preamble = get_instructions(args.additional_instructions) or ""
-    estimated_word_count = len((preamble + extra_preamble).split())
-    with (Path(devnull) if args.dry_run else source).open(
-        "w", encoding="utf-8"
-    ) as notebook_source:
-        notebook_source.write(preamble)
-        if extra_preamble:
-            notebook_source.write(f"\n\n# ADDITIONAL RULES\n\n{extra_preamble}")
-        notebook_source.write("\n\n---\n\n")
+    preamble_words = len((preamble + extra_preamble).split())
+
+    part = 1
+    current_toc: list[Path] = []
+    part_summaries: list[tuple[int, Path]] = []
+    estimated_word_count = preamble_words
+
+    output_path = Path(devnull) if args.dry_run else part_path(source, part)
+    notebook_source = output_path.open("w", encoding="utf-8")
+    write_preamble(notebook_source, preamble, extra_preamble)
+
+    try:
         for vault_file in vault.rglob("*.md"):
-            table_of_content.append(vault_file.relative_to(vault))
-            notebook_source.write(f"BEGIN SOURCE: {vault_file.relative_to(vault)}\n\n")
-            notebook_source.write(content := vault_file.read_text(encoding="utf-8"))
-            estimated_word_count += len(content.split())
-            notebook_source.write(
-                f"\n\nEND SOURCE: {vault_file.relative_to(vault)}\n\n"
+            relative = vault_file.relative_to(vault)
+            content = vault_file.read_text(encoding="utf-8")
+            file_words = len(content.split())
+            # Rough overhead: TOC entry + BEGIN/END SOURCE markers per file.
+            toc_overhead = (len(current_toc) + 1) * 7
+
+            if (
+                args.split
+                and current_toc
+                and estimated_word_count + file_words + toc_overhead > WORD_LIMIT
+            ):
+                write_toc(notebook_source, current_toc)
+                notebook_source.close()
+                part_summaries.append(
+                    (
+                        estimated_word_count + len(current_toc) * 7,
+                        part_path(source, part),
+                    )
+                )
+                part += 1
+                current_toc = []
+                estimated_word_count = preamble_words
+                output_path = Path(devnull) if args.dry_run else part_path(source, part)
+                notebook_source = output_path.open("w", encoding="utf-8")
+                write_preamble(notebook_source, preamble, extra_preamble)
+                print(
+                    f"  {'Would start' if args.dry_run else 'Starting'} part {part}: {part_path(source, part)}"
+                )
+
+            current_toc.append(relative)
+            notebook_source.write(f"BEGIN SOURCE: {relative}\n\n")
+            notebook_source.write(content)
+            estimated_word_count += file_words
+            notebook_source.write(f"\n\nEND SOURCE: {relative}\n\n")
+
+        write_toc(notebook_source, current_toc)
+    finally:
+        notebook_source.close()
+
+    # Add overhead for the final part's TOC and begin/end markers.
+    estimated_word_count += len(current_toc) * 7
+    part_summaries.append((estimated_word_count, part_path(source, part)))
+
+    if part > 1:
+        print(f"Split into {part} parts:")
+        for words, path in part_summaries:
+            print(
+                f"  {path}: ~{words:,} words ({(words / WORD_LIMIT) * 100:.1f}% of limit)"
             )
-        notebook_source.write("\n\nBEGIN TABLE OF CONTENT\n\n")
-        for entry in sorted(table_of_content):
-            notebook_source.write(f"* {entry}\n")
-        notebook_source.write("\n\nEND TABLE OF CONTENT\n\n")
-    # Add some extra word count for the TOC itself, and also include a rough
-    # estimate for the begin/end markers for the content.
-    estimated_word_count += len(table_of_content) * 7
-    print(f"Estimated word count: {estimated_word_count:,}")
-    if estimated_word_count > WORD_LIMIT:
-        print("NotebookLM will truncate this source!")
     else:
-        print(f"{(estimated_word_count / WORD_LIMIT) * 100:.1f}% of the limit")
+        print(f"Estimated word count: {estimated_word_count:,}")
+        if estimated_word_count > WORD_LIMIT:
+            print("NotebookLM will truncate this source!")
+        else:
+            print(f"{(estimated_word_count / WORD_LIMIT) * 100:.1f}% of the limit")
 
 
 ##############################################################################
@@ -168,6 +251,14 @@ def get_args() -> Namespace:
         "-d",
         "--dry-run",
         help="Don't actually write the source file, just print out what would be done",
+        action="store_true",
+    )
+
+    # Allow splitting into multiple files.
+    parser.add_argument(
+        "-s",
+        "--split",
+        help="Split the output into multiple files when approaching the word limit",
         action="store_true",
     )
 
