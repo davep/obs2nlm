@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -642,7 +642,7 @@ with:</p>
 <div class="highlight"><pre><span></span><code>obs2nlm<span class="w"> </span>--help
 </code></pre></div>
 <p>giving output like this:</p>
-<div class="highlight"><pre><span></span><code>usage: obs2nlm [-h] [-a ADDITIONAL_INSTRUCTIONS] [-i INSTRUCTIONS]
+<div class="highlight"><pre><span></span><code>usage: obs2nlm [-h] [-a ADDITIONAL_INSTRUCTIONS] [-d] [-s] [-i INSTRUCTIONS]
                --vault VAULT [--source SOURCE] [-v]
 
 Turn an Obsidian vault into a NotebookLM source
@@ -652,6 +652,10 @@ options:
   -a, --additional-instructions ADDITIONAL_INSTRUCTIONS
                         Additional instructions to pass on to NotebookLM at
                         the top of the source
+  -d, --dry-run         Don&#39;t actually write the source file, just print out
+                        what would be done
+  -s, --split           Split the output into multiple files when approaching
+                        the word limit
   -i, --instructions INSTRUCTIONS
                         Override the builtin instructions to pass on to
                         NotebookLM at the top of the source,
@@ -660,7 +664,7 @@ options:
                         NotebookLM
   -v, --version         Show version information
 
-v1.1.2
+v1.2.0
 </code></pre></div>
 <p>The key options are:</p>
 <h3 id="-vault"><code>--vault</code></h3>
