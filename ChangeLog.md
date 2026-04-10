@@ -1,5 +1,11 @@
 # obs2nlm ChangeLog
 
+## Unreleased
+
+**Released: WiP**
+
+- Added a `--dry-run` command line option.
+
 ## v1.1.2
 
 **Released: 2026-01-11**

@@ -3,6 +3,7 @@
 ##############################################################################
 # Python imports.
 from argparse import ArgumentParser, Namespace
+from os import devnull
 from pathlib import Path
 from typing import Final
 
@@ -105,12 +106,16 @@ def make_source(args: Namespace) -> None:
     vault = resolve_vault(args.vault)
     source = resolve_source(args)
 
-    print(f"Converting {vault} to {source}")
+    print(
+        f"{'Simulating converting' if args.dry_run else 'Converting'} {vault} to {source}"
+    )
     table_of_content: list[Path] = []
     preamble = get_instructions(args.instructions) or PREAMBLE
     extra_preamble = get_instructions(args.additional_instructions) or ""
     estimated_word_count = len((preamble + extra_preamble).split())
-    with source.open("w", encoding="utf-8") as notebook_source:
+    with (Path(devnull) if args.dry_run else source).open(
+        "w", encoding="utf-8"
+    ) as notebook_source:
         notebook_source.write(preamble)
         if extra_preamble:
             notebook_source.write(f"\n\n# ADDITIONAL RULES\n\n{extra_preamble}")
@@ -156,6 +161,14 @@ def get_args() -> Namespace:
         "-a",
         "--additional-instructions",
         help="Additional instructions to pass on to NotebookLM at the top of the source",
+    )
+
+    # Allow for a dry run.
+    parser.add_argument(
+        "-d",
+        "--dry-run",
+        help="Don't actually write the source file, just print out what would be done",
+        action="store_true",
     )
 
     # Replace the builtin instructions.
