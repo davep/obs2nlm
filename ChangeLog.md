@@ -8,6 +8,7 @@
   ([#12](https://github.com/davep/obs2nlm/pull/12))
 - Added a `--split` command line option, to split the output source file if
   it gets close to the NotebookLM word limit.
+  ([#13](https://github.com/davep/obs2nlm/pull/13))
 
 ## v1.1.2
 
