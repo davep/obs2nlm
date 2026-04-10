@@ -5,7 +5,7 @@
 from argparse import ArgumentParser, Namespace
 from os import devnull
 from pathlib import Path
-from typing import Final
+from typing import IO, Final
 
 ##############################################################################
 # Local imports.
@@ -110,7 +110,7 @@ def part_path(source: Path, part: int) -> Path:
 
 
 ##############################################################################
-def write_preamble(output, preamble: str, extra_preamble: str) -> None:
+def write_preamble(output: IO[str], preamble: str, extra_preamble: str) -> None:
     """Write the preamble block to an output file.
 
     Args:
@@ -125,7 +125,7 @@ def write_preamble(output, preamble: str, extra_preamble: str) -> None:
 
 
 ##############################################################################
-def write_toc(output, table_of_content: list[Path]) -> None:
+def write_toc(output: IO[str], table_of_content: list[Path]) -> None:
     """Write the table of contents block to an output file.
 
     Args:
