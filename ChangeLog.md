@@ -5,6 +5,7 @@
 **Released: WiP**
 
 - Added a `--dry-run` command line option.
+  ([#12](https://github.com/davep/obs2nlm/pull/12))
 
 ## v1.1.2
 
